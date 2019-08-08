@@ -7,6 +7,7 @@ import { starApiConstants } from 'constants/api';
 import Chip from 'components/Chip';
 import theme from 'constants/theme';
 import StyledScrollView from 'components/StyledScrollView';
+import { HeaderButton } from 'components/StyledButton';
 
 const sampleHours = [
   { idcourse: 'id0', minutesDiff: '', precision: 'Temps réel' },
@@ -48,8 +49,9 @@ const getHours = async () => {
   return [];
 };
 
-export default function FavoritesScreen() {
+export default function FavoritesScreen({ navigation }) {
   const [pristine, setPristine] = useState(true);
+  const [updating, setUpdating] = useState(false);
   const [pulseAnim] = useState(new Animated.Value(0.2));
   const [hours, setHours] = useState([]);
   const pulse = () => {
@@ -58,12 +60,21 @@ export default function FavoritesScreen() {
       Animated.timing(pulseAnim, { toValue: 0.2, duration: 800 }),
     ]).start(() => pristine && pulse());
   };
-  useEffect(() => {
-    pulse();
+  const updateHours = () => {
+    setUpdating(true);
+    setHours([]);
     getHours().then(hours => {
       setHours(hours);
-      setPristine(false);
+      setUpdating(false);
+      if (pristine) {
+        setPristine(false);
+      }
     });
+  };
+  useEffect(() => {
+    navigation.setParams({ updateHours });
+    pulse();
+    updateHours();
   }, [null]);
 
   const StyledChips = ({ hours, sample = false }) =>
@@ -91,17 +102,20 @@ export default function FavoritesScreen() {
           </Animated.View>
         ) : hours.length ? (
           <StyledChips hours={hours} />
+        ) : updating ? (
+          <Text>...</Text>
         ) : (
-          <Text>Rien</Text>
+          <Text>Nothing</Text>
         )}
       </View>
     </StyledScrollView>
   );
 }
 
-FavoritesScreen.navigationOptions = {
+FavoritesScreen.navigationOptions = ({ navigation }) => ({
   title: 'Favorites',
-};
+  headerRight: <HeaderButton onPress={navigation.getParam('updateHours')} title="Refresh" />,
+});
 
 const styles = StyleSheet.create({
   stopText: {

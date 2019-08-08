@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Roazhon movement",
+    "slug": "roazhon-movement",
+    "privacy": "unlisted",
+    "sdkVersion": "34.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "0.1.0",
+    "android": {
+      "package": "bzh.guillaumejparis.roazhonmovement"
+    },
+    "ios": {
+      "bundleIdentifier": "bzh.guillaumejparis.roazhonmovement",
+      "supportsTablet": true
+    },
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

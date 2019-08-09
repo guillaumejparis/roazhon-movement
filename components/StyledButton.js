@@ -6,7 +6,7 @@ import theme from 'constants/theme';
 export function HeaderButton(props) {
   return (
     <View style={styles.container}>
-      <Button {...props} color={colors.primary.main} />
+      <Button {...props} color={colors.accent.main} />
     </View>
   );
 }

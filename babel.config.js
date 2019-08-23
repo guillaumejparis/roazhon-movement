@@ -10,6 +10,7 @@ module.exports = function(api) {
             components: './components',
             conf: './conf',
             constants: './constants',
+            hooks: './hooks',
             navigation: './navigation',
             screens: './screens',
             services: './services',

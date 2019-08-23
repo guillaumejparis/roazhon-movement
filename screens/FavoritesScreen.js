@@ -1,133 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Animated } from 'react-native';
-import { differenceInMinutes, parseISO } from 'date-fns';
-import conf from 'conf/conf';
-import { fetchWithAuth } from 'services/api';
-import { starApiConstants } from 'constants/api';
-import Chip from 'components/Chip';
-import theme from 'constants/theme';
-import StyledScrollView from 'components/StyledScrollView';
 import { HeaderButton } from 'components/StyledButton';
-
-const sampleHours = [
-  { idcourse: 'id0', minutesDiff: '', precision: 'Temps réel' },
-  { idcourse: 'id1', minutesDiff: '', precision: 'Temps réel' },
-  { idcourse: 'id2', minutesDiff: '', precision: 'Temps réel' },
-  { idcourse: 'id3', minutesDiff: '', precision: '' },
-  { idcourse: 'id4', minutesDiff: '', precision: '' },
-  { idcourse: 'id5', minutesDiff: '', precision: '' },
-  { idcourse: 'id6', minutesDiff: '', precision: '' },
-];
-
-const getHours = async () => {
-  const response = await fetchWithAuth(conf.starApi.hoursToStopRecords, {
-    where: `
-      ${starApiConstants.smallLineName}="C6" 
-      AND ${starApiConstants.stopName}="Hublais" 
-      AND ${starApiConstants.destination}="Aéroport"
-    `,
-    select: `
-      ${starApiConstants.theoreticalArrival},
-      ${starApiConstants.precision},
-      ${starApiConstants.arrival},
-       ${starApiConstants.id}
-    `,
-    sort: `${starApiConstants.arrival}`,
-    rows: 10,
-    pretty: false,
-    timezone: 'UTC',
-  });
-  if (response.records) {
-    return response.records.map(record => ({
-      ...record.record.fields,
-      minutesDiff: `${differenceInMinutes(
-        parseISO(record.record.fields[starApiConstants.arrival]),
-        Date.now()
-      )}`,
-    }));
-  }
-  return [];
-};
+import RefreshControlScrollView from 'components/RefreshControlScrollView';
+import Hours from 'components/Hours';
+import useAppState from 'hooks/useAppState';
 
 export default function FavoritesScreen({ navigation }) {
-  const [pristine, setPristine] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const [pulseAnim] = useState(new Animated.Value(0.2));
-  const [hours, setHours] = useState([]);
-  const pulse = () => {
-    Animated.sequence([
-      Animated.timing(pulseAnim, { toValue: 0.8, duration: 800 }),
-      Animated.timing(pulseAnim, { toValue: 0.2, duration: 800 }),
-    ]).start(() => pristine && pulse());
+  const [refreshState, setRefreshState] = useState(false);
+
+  const refresh = async () => {
+    await setRefreshState(true);
+    setRefreshState(false);
   };
-  const updateHours = () => {
-    setUpdating(true);
-    setHours([]);
-    getHours().then(hours => {
-      setHours(hours);
-      setUpdating(false);
-      if (pristine) {
-        setPristine(false);
-      }
-    });
-  };
+
+  useAppState({
+    onForeground: refresh,
+  });
+
   useEffect(() => {
-    navigation.setParams({ updateHours });
-    pulse();
-    updateHours();
+    navigation.setParams({ refresh });
   }, [null]);
 
-  const StyledChips = ({ hours, sample = false }) =>
-    hours.map(hour => (
-      <Chip
-        key={hour[starApiConstants.id]}
-        style={styles.chip}
-        text={hour.minutesDiff}
-        icon={hour[starApiConstants.precision] === 'Temps réel' && 'flash'}
-        sample={sample}
-      />
-    ));
-
   return (
-    <StyledScrollView>
-      <Text style={styles.stopText}>Hublais (Aéroport)</Text>
-      <View style={styles.chipsContainer}>
-        {pristine ? (
-          <Animated.View
-            style={{
-              ...styles.chipsContainer,
-              opacity: pulseAnim,
-            }}>
-            <StyledChips hours={sampleHours} sample />
-          </Animated.View>
-        ) : hours.length ? (
-          <StyledChips hours={hours} />
-        ) : updating ? (
-          <Text>...</Text>
-        ) : (
-          <Text>Nothing</Text>
-        )}
-      </View>
-    </StyledScrollView>
+    <RefreshControlScrollView refresh={refresh}>
+      <Hours refresh={refreshState} bus="C6" stop="Hublais" destination="Aéroport" />
+      <Hours refresh={refreshState} bus="C6" stop="République" destination="Cesson-Sévigné" />
+    </RefreshControlScrollView>
   );
 }
 
 FavoritesScreen.navigationOptions = ({ navigation }) => ({
   title: 'Favorites',
-  headerRight: <HeaderButton onPress={navigation.getParam('updateHours')} title="Refresh" />,
-});
-
-const styles = StyleSheet.create({
-  stopText: {
-    paddingBottom: theme.padding.betweenElements,
-  },
-  chipsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    paddingRight: theme.padding.betweenBadges,
-    paddingBottom: theme.padding.betweenElements,
-  },
+  headerRight: <HeaderButton onPress={navigation.getParam('refresh')} title="Refresh" />,
 });

@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     fontSize: theme.defaultFontSize,
     fontWeight: 'normal',
     minWidth: theme.chip.minTitleWidth,
+    textAlign: 'center',
   },
   icon: {
     color: colors.white,

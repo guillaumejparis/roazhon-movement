@@ -3,7 +3,13 @@ import { ScrollView, StyleSheet } from 'react-native';
 import theme from 'constants/theme';
 import colors from 'constants/colors';
 
-export default ({ children }) => <ScrollView style={styles.container}>{children}</ScrollView>;
+export default function StyledScrollView({ children, ...props }) {
+  return (
+    <ScrollView {...props} style={[styles.container, props.style]}>
+      {children}
+    </ScrollView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -7,10 +7,10 @@ import theme from 'constants/theme';
 import colors from 'constants/colors';
 import { nameIconByPlateform } from 'services/utils';
 
-export default ({ icon, text, style }) => (
+export default ({ icon, style, first, minutes, seconds, imminent }) => (
   <View style={style}>
     <RNChipView
-      title={text}
+      title={imminent ? 'Imminent' : first ? `${minutes}${seconds}` : minutes}
       style={style}
       height={theme.chip.height}
       titleStyle={styles.title}
@@ -32,7 +32,7 @@ export default ({ icon, text, style }) => (
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: theme.defaultFontSize,
+    fontSize: theme.fontSize.small,
     fontWeight: 'normal',
     minWidth: theme.chip.minTitleWidth,
     textAlign: 'center',

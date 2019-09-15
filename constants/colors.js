@@ -2,9 +2,13 @@ const primaryColor = '#607d8b';
 const primaryLightColor = '#8eacbb';
 const primaryDarkColor = '#34515e';
 
-const accentColor = '#c51162';
-const accentLightColor = '#fd558f';
-const accentDarkColor = '#8e0038';
+const accentColor = '#ffc400';
+const accentLightColor = '#fff64f';
+const accentDarkColor = '#c79400';
+
+const noSelectedColor = '#c4c4c4';
+const noSelectedLightColor = '#f7f7f7';
+const noSelectedDarkColor = '#949494';
 
 export default {
   primary: {
@@ -17,8 +21,13 @@ export default {
     light: accentLightColor,
     dark: accentDarkColor,
   },
+  noSelected: {
+    main: noSelectedColor,
+    light: noSelectedLightColor,
+    dark: noSelectedDarkColor,
+  },
+  danger: 'red',
   backgroundColor: '#fafafa',
-  tabIconDefault: '#ccc',
   chipColor: '#dedede',
   white: '#fff',
 };

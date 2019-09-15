@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
 import theme from 'constants/theme';
-import { starApiConstants } from 'constants/api';
 import { sampleHours } from 'services/samples';
-import HourChip from 'components/HourChip';
+import HourChip from 'components/hours/HourChip';
 
-const Chips = ({ hours, sample }) =>
-  hours.map(hour => (
-    <HourChip
-      key={hour[starApiConstants.id]}
-      style={styles.chip}
-      text={hour.minutesDiff}
-      icon={hour[starApiConstants.precision] === 'Temps réel' && 'flash'}
-      sample={sample}
-    />
-  ));
+const Chips = ({ hours, sample }) => {
+  let first = true;
+
+  return hours.map(({ minutesDiff, secondsDiff, courseId, precision }) => {
+    if (first) {
+      first = false;
+    }
+    return (
+      <HourChip
+        key={courseId}
+        style={styles.chip}
+        first={first}
+        minutes={minutesDiff}
+        seconds={secondsDiff}
+        imminent={minutesDiff === '0' && secondsDiff === '00'}
+        icon={precision === 'Temps réel' && 'flash'}
+        sample={sample}
+      />
+    );
+  });
+};
 
 export default function HoursChips({ hours, sample }) {
   const [pulseAnim] = useState(new Animated.Value(0.2));
@@ -53,5 +63,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    paddingLeft: theme.padding.tab,
   },
 });

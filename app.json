@@ -4,12 +4,8 @@
     "slug": "roazhon-movement",
     "privacy": "unlisted",
     "sdkVersion": "34.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "0.3.0",
+    "platforms": ["ios", "android", "web"],
+    "version": "1.0.0",
     "android": {
       "package": "bzh.guillaumejparis.roazhonmovement"
     },
@@ -26,8 +22,6 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "assetBundlePatterns": ["**/*"]
   }
 }

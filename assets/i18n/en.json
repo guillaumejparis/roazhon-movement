@@ -1,0 +1,14 @@
+{
+  "addStop": "Add Stop",
+
+  "reset": "Reset",
+  "cancel": "Cancel",
+  "ok": "Ok",
+
+  "question.reset": "Are you sure to reset ?",
+
+  "header.favorites": "Favorites",
+  "header.settings": "Settings",
+
+  "settings.credits": "Credits"
+}

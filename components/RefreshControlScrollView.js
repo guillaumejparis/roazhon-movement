@@ -19,8 +19,8 @@ export default function RefreshControlScrollView({ children, refresh }) {
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          tintColor={colors.accent.light}
-          colors={[colors.accent.light]}
+          tintColor={colors.accent.main}
+          colors={[colors.accent.main, colors.accent.dark, colors.accent.light]}
         />
       }>
       <View style={styles.children}>{children}</View>

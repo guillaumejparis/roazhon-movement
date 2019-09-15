@@ -6,7 +6,7 @@ const tranformUrlParams = urlParams =>
     ''
   );
 
-const fetchWithAuth = async (url, urlParams, options) => {
+const fetchWithStarAuth = async (url, urlParams, options) => {
   try {
     const response = await fetch(
       `${url}?${tranformUrlParams(urlParams)}&apikey=${conf.starApiKey}`,
@@ -19,9 +19,9 @@ const fetchWithAuth = async (url, urlParams, options) => {
 
     return json;
   } catch (e) {
-    console.log(e);
+    console.warn(e);
     return e;
   }
 };
 
-export { fetchWithAuth };
+export { fetchWithStarAuth };
